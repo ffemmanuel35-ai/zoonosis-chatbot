@@ -20,8 +20,8 @@ Puedo informarte sobre:
 # ======================================================
 # ⚙️ CONFIGURACIÓN DE HUGGING FACE
 # ======================================================
-API_URL = "https://router.huggingface.co/hf-inference/models/microsoft/Phi-3-mini-4k-instruct"
-API_KEY = st.secrets["general"]["hf_api_key"]  # ✅ coincide con el formato del Secret en Streamlit
+API_URL = "https://router.huggingface.co/models/microsoft/Phi-3-mini-4k-instruct"
+API_KEY = st.secrets["general"]["hf_api_key"]  # ✅ coincide con el Secret de Streamlit
 
 def responder_hf(historial):
     """Envía el historial al modelo remoto de Hugging Face."""
@@ -44,8 +44,12 @@ def responder_hf(historial):
     if response.status_code == 200:
         result = response.json()
         try:
-            # Algunos modelos devuelven lista, otros texto directo
-            return result[0]["generated_text"].split("Asistente:")[-1].strip()
+            if isinstance(result, list) and "generated_text" in result[0]:
+                return result[0]["generated_text"].split("Asistente:")[-1].strip()
+            elif "generated_text" in result:
+                return result["generated_text"]
+            else:
+                return str(result)
         except Exception:
             return str(result)
     else:
