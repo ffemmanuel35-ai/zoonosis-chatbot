@@ -20,12 +20,17 @@ Puedo informarte sobre:
 # ======================================================
 # ⚙️ CONFIGURACIÓN DE HUGGING FACE
 # ======================================================
-API_URL = "https://router.huggingface.co/hf-inference/models/microsoft/Phi-3-mini-4k-instruct"
+API_URL = "https://api-inference.huggingface.co/models/microsoft/Phi-3-mini-4k-instruct"
 API_KEY = st.secrets["general"]["hf_api_key"]  # ✅ coincide con el formato del Secret en Streamlit
 
 def responder_hf(historial):
     """Envía el historial al modelo remoto de Hugging Face."""
-    headers = {"Authorization": f"Bearer {API_KEY}"}
+    headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+}
+
 
     # Convertimos el historial en un único texto (estilo chat)
     prompt = "\n".join([
