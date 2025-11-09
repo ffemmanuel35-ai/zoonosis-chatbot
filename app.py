@@ -20,8 +20,8 @@ Puedo informarte sobre:
 # ======================================================
 # ⚙️ CONFIGURACIÓN DE HUGGING FACE
 # ======================================================
-API_URL = "https://router.huggingface.co/models/microsoft/Phi-3-mini-4k-instruct"
-API_KEY = st.secrets["general"]["hf_api_key"]  # ✅ coincide con el Secret de Streamlit
+API_URL = "https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
+API_KEY = st.secrets["general"]["hf_api_key"]  # ✅ Asegurate de tenerlo en Streamlit Secrets
 
 def responder_hf(historial):
     """Envía el historial al modelo remoto de Hugging Face."""
