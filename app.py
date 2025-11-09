@@ -21,7 +21,7 @@ Puedo informarte sobre:
 # ⚙️ CONFIGURACIÓN DE HUGGING FACE
 # ======================================================
 API_URL = "https://api-inference.huggingface.co/models/microsoft/Phi-3-mini-4k-instruct"
-API_KEY = st.secrets["hf_api_key"] # Se configura en los secrets de Streamlit Cloud
+API_KEY = st.secrets["general"]["hf_api_key"]  # ✅ coincide con el formato del Secret en Streamlit
 
 def responder_hf(historial):
     """Envía el historial al modelo remoto de Hugging Face."""
