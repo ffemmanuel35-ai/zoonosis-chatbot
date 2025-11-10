@@ -4,21 +4,22 @@ import requests
 # ======================================================
 # 🧠 CONFIGURACIÓN DE HUGGING FACE (NUEVO ENDPOINT)
 # ======================================================
-API_URL = "https://router.huggingface.co/hf-inference/models/microsoft/Phi-3-mini-4k-instruct"
+API_URL = "https://api.huggingface.co/models/google/gemma-2b-it"  # ✅ modelo activo
 API_KEY = st.secrets["general"]["hf_api_key"]
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "Accept": "application/json"
 }
 
 # ======================================================
 # 🐾 INTERFAZ DE USUARIO
 # ======================================================
-st.set_page_config(page_title="Carla - Chatbot de Zoonosis", page_icon="🐾", layout="centered")
+st.set_page_config(page_title="Carla - Asistente Virtual de Zoonosis", page_icon="🐾", layout="centered")
 st.title("🐾 Carla - Asistente Virtual de Zoonosis")
 st.markdown("""
-¡Hola! Soy **Carla2**, tu asistente virtual.  
+¡Hola! Soy **Carla3**, tu asistente virtual.  
 Puedo ayudarte con información sobre zoonosis, vacunación y cuidado animal. 🐶🐱
 """)
 
@@ -26,7 +27,7 @@ Puedo ayudarte con información sobre zoonosis, vacunación y cuidado animal. �
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Mostrar historial del chat
+# Mostrar historial
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
@@ -37,14 +38,12 @@ for msg in st.session_state.messages:
 prompt = st.chat_input("Escribí tu mensaje aquí...")
 
 if prompt:
-    # Mostrar mensaje del usuario
     st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Crear payload para Hugging Face
     payload = {
         "inputs": prompt,
-        "parameters": {"max_new_tokens": 250}
+        "parameters": {"max_new_tokens": 250, "temperature": 0.7}
     }
 
     try:
@@ -64,6 +63,5 @@ if prompt:
     except Exception as e:
         reply = f"⚠️ Error: {str(e)}"
 
-    # Mostrar respuesta del bot
     st.chat_message("assistant").markdown(reply)
     st.session_state.messages.append({"role": "assistant", "content": reply})
