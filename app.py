@@ -1,17 +1,17 @@
 import streamlit as st
 from transformers import pipeline
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 
 # -----------------------------------------------------------
 # CONFIGURACIÓN DE LA PÁGINA
 # -----------------------------------------------------------
 st.set_page_config(
-    page_title="CarlaTL - Asistente de Zoonosis",
+    page_title="Carla - Asistente de Zoonosis",
     page_icon="🐾",
     layout="centered"
 )
 
-st.title("🐾 Carla - Asistente Virtual de Zoonosis")
+st.title("🐾 CarlaTLR - Asistente Virtual de Zoonosis")
 st.markdown(
     "¡Hola! Soy **Carla**, tu asistente virtual. 🐶🐱<br>"
     "Puedo ayudarte con información sobre **zoonosis, vacunación, prevención y cuidado animal**.",
@@ -34,7 +34,8 @@ def cargar_modelo():
         return None
 
 nlp = cargar_modelo()
-translator = Translator()
+translator = GoogleTranslator(source='auto', target='en')
+translator_back = GoogleTranslator(source='en', target='es')
 
 # -----------------------------------------------------------
 # CONTEXTO DEL CHATBOT
@@ -56,7 +57,7 @@ def responder(texto_es):
         return "Por favor, escribí una pregunta o mensaje."
 
     # Traducir al inglés (TinyLlama fue entrenado principalmente en inglés)
-    texto_en = translator.translate(texto_es, src='es', dest='en').text
+    texto_en = translator.translate(texto_es)
 
     prompt_en = (
         f"{contexto}\n\n"
@@ -79,7 +80,7 @@ def responder(texto_es):
         st.error(f"⚠️ Error interno del modelo: {e}")
 
     # Traducir respuesta al español
-    respuesta_es = translator.translate(respuesta_en, src='en', dest='es').text
+    respuesta_es = translator_back.translate(respuesta_en)
 
     # Actualizar historial
     st.session_state.historial += f"\nUsuario: {texto_es}\nCarla: {respuesta_es}"
