@@ -1,67 +1,102 @@
 import streamlit as st
-import requests
+from transformers import pipeline
+from googletrans import Translator
 
-# ======================================================
-# 🧠 CONFIGURACIÓN DE HUGGING FACE (NUEVO ENDPOINT)
-# ======================================================
-API_URL = "https://api.huggingface.co/models/google/gemma-2b-it"  # ✅ modelo activo
-API_KEY = st.secrets["general"]["hf_api_key"]
+# -----------------------------------------------------------
+# CONFIGURACIÓN DE LA PÁGINA
+# -----------------------------------------------------------
+st.set_page_config(
+    page_title="CarlaTL - Asistente de Zoonosis",
+    page_icon="🐾",
+    layout="centered"
+)
 
-headers = {
-    "Authorization": f"Bearer {API_KEY}",
-    "Content-Type": "application/json",
-    "Accept": "application/json"
-}
-
-# ======================================================
-# 🐾 INTERFAZ DE USUARIO
-# ======================================================
-st.set_page_config(page_title="Carla - Asistente Virtual de Zoonosis", page_icon="🐾", layout="centered")
 st.title("🐾 Carla - Asistente Virtual de Zoonosis")
-st.markdown("""
-¡Hola! Soy **Carla3**, tu asistente virtual.  
-Puedo ayudarte con información sobre zoonosis, vacunación y cuidado animal. 🐶🐱
-""")
+st.markdown(
+    "¡Hola! Soy **Carla**, tu asistente virtual. 🐶🐱<br>"
+    "Puedo ayudarte con información sobre **zoonosis, vacunación, prevención y cuidado animal**.",
+    unsafe_allow_html=True
+)
 
-# Guardar historial
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# -----------------------------------------------------------
+# CARGAR MODELO (TinyLlama)
+# -----------------------------------------------------------
+@st.cache_resource
+def cargar_modelo():
+    try:
+        model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+        st.info(f"Cargando modelo `{model_name}`... Puede tardar unos segundos ⏳")
+        model = pipeline("text-generation", model=model_name)
+        st.success("✅ Modelo cargado correctamente.")
+        return model
+    except Exception as e:
+        st.error(f"❌ Error al cargar el modelo: {e}")
+        return None
 
-# Mostrar historial
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+nlp = cargar_modelo()
+translator = Translator()
 
-# ======================================================
-# 💬 INTERACCIÓN
-# ======================================================
-prompt = st.chat_input("Escribí tu mensaje aquí...")
+# -----------------------------------------------------------
+# CONTEXTO DEL CHATBOT
+# -----------------------------------------------------------
+contexto = (
+    "Eres Carla, una asistente virtual especializada en zoonosis, vacunación y cuidado animal. "
+    "Brindas información confiable y clara sobre prevención de enfermedades, campañas de vacunación, "
+    "cuidados veterinarios y tenencia responsable de mascotas. Respondes siempre en español y con un tono amable."
+)
 
-if prompt:
-    st.chat_message("user").markdown(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
+if "historial" not in st.session_state:
+    st.session_state.historial = ""
 
-    payload = {
-        "inputs": prompt,
-        "parameters": {"max_new_tokens": 250, "temperature": 0.7}
-    }
+# -----------------------------------------------------------
+# FUNCIÓN DE RESPUESTA
+# -----------------------------------------------------------
+def responder(texto_es):
+    if not texto_es.strip():
+        return "Por favor, escribí una pregunta o mensaje."
+
+    # Traducir al inglés (TinyLlama fue entrenado principalmente en inglés)
+    texto_en = translator.translate(texto_es, src='es', dest='en').text
+
+    prompt_en = (
+        f"{contexto}\n\n"
+        f"Previous conversation:\n{st.session_state.historial}\n\n"
+        f"User: {texto_en}\nAssistant:"
+    )
 
     try:
-        response = requests.post(API_URL, headers=headers, json=payload)
-
-        if response.status_code == 200:
-            data = response.json()
-            if isinstance(data, list) and "generated_text" in data[0]:
-                reply = data[0]["generated_text"]
-            elif isinstance(data, dict) and "generated_text" in data:
-                reply = data["generated_text"]
-            else:
-                reply = "Lo siento, no pude generar una respuesta."
-        else:
-            reply = f"⚠️ Error al conectar con Hugging Face: {response.status_code} - {response.text}"
-
+        generacion = nlp(
+            prompt_en,
+            max_new_tokens=60,
+            do_sample=True,
+            temperature=0.8,
+            top_p=0.9,
+            num_return_sequences=1
+        )[0]
+        respuesta_en = generacion['generated_text'][len(prompt_en):].strip()
     except Exception as e:
-        reply = f"⚠️ Error: {str(e)}"
+        respuesta_en = "I'm not sure how to respond to that."
+        st.error(f"⚠️ Error interno del modelo: {e}")
 
-    st.chat_message("assistant").markdown(reply)
-    st.session_state.messages.append({"role": "assistant", "content": reply})
+    # Traducir respuesta al español
+    respuesta_es = translator.translate(respuesta_en, src='en', dest='es').text
+
+    # Actualizar historial
+    st.session_state.historial += f"\nUsuario: {texto_es}\nCarla: {respuesta_es}"
+    return respuesta_es
+
+# -----------------------------------------------------------
+# INTERFAZ DE CHAT
+# -----------------------------------------------------------
+user_input = st.text_input("💬 Escribí tu consulta aquí:")
+
+if st.button("Enviar"):
+    if nlp:
+        respuesta = responder(user_input)
+        st.markdown(f"**🐾 Carla:** {respuesta}")
+    else:
+        st.error("El modelo no se pudo cargar correctamente.")
+
+# Mostrar historial opcional
+with st.expander("🧠 Ver historial de conversación"):
+    st.text(st.session_state.historial)
