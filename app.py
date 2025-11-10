@@ -1,8 +1,8 @@
 import streamlit as st
 import requests
 
-# 🧠 Configuración del modelo Hugging Face (gratuito y compatible)
-API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill"
+# 🧠 Configuración del modelo Hugging Face (nuevo endpoint)
+API_URL = "https://router.huggingface.co/hf-inference/models/facebook/blenderbot-400M-distill"
 API_KEY = st.secrets["general"]["hf_api_key"]
 
 headers = {"Authorization": f"Bearer {API_KEY}"}
@@ -19,7 +19,7 @@ st.markdown(
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Mostrar mensajes previos
+# Mostrar historial
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
@@ -32,20 +32,25 @@ if prompt:
     st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Enviar a la API de Hugging Face
+    # Enviar solicitud al nuevo endpoint
     payload = {"inputs": prompt}
-    response = requests.post(API_URL, headers=headers, json=payload)
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
 
-    if response.status_code == 200:
-        try:
+        if response.status_code == 200:
             data = response.json()
-            bot_reply = data[0]["generated_text"]
-        except Exception:
-            bot_reply = "Lo siento, ocurrió un error procesando la respuesta."
-    else:
-        bot_reply = f"⚠️ Error al conectar con Hugging Face: {response.status_code}"
+            if isinstance(data, list) and "generated_text" in data[0]:
+                bot_reply = data[0]["generated_text"]
+            else:
+                bot_reply = "Lo siento, no pude generar una respuesta."
+        else:
+            bot_reply = f"⚠️ Error al conectar con Hugging Face: {response.status_code}"
 
-    # Mostrar respuesta del bot
+    except Exception as e:
+        bot_reply = f"⚠️ Error al procesar la solicitud: {str(e)}"
+
+    # Mostrar respuesta
     with st.chat_message("assistant"):
         st.markdown(bot_reply)
+
     st.session_state.messages.append({"role": "assistant", "content": bot_reply})
