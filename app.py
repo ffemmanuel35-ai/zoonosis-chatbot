@@ -1,39 +1,51 @@
-# 🐾 Chatbot "Carla" usando Hugging Face - Blenderbot
-# Modelo: facebook/blenderbot-400M-distill
+import streamlit as st
+import requests
 
-from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
-import torch
+# 🧠 Configuración del modelo Hugging Face (gratuito y compatible)
+API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill"
+API_KEY = st.secrets["general"]["hf_api_key"]
 
-print("🐾 Iniciando Carla...")
+headers = {"Authorization": f"Bearer {API_KEY}"}
 
-# Intentar cargar modelo y tokenizer desde Hugging Face
-try:
-    model_name = "facebook/blenderbot-400M-distill"
-    tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
-    model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
-    print("✅ Modelo cargado correctamente desde Hugging Face.")
-except Exception as e:
-    print(f"⚠️ Error al conectar con Hugging Face: {e}")
-    exit()
+st.set_page_config(page_title="Carla - Chatbot de Zoonosis", page_icon="🐾", layout="centered")
 
-# 💬 Función para conversar
-def chat_with_carla():
-    print("\n🐾 Carla: ¡Hola! Soy tu asistente virtual. Escribe 'salir' para terminar.\n")
+st.title("🐾 Carla - Asistente Virtual de Zoonosis")
 
-    while True:
-        user_input = input("Tú: ")
-        if user_input.lower() in ["salir", "exit", "quit"]:
-            print("🐾 Carla: ¡Hasta luego! 🐕")
-            break
+st.markdown(
+    "¡Hola! Soy **Carla**, tu asistente virtual. Puedo ayudarte con información sobre zoonosis, vacunación y cuidado animal. 🐶🐱"
+)
 
+# Guardar historial del chat
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Mostrar mensajes previos
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+# Entrada del usuario
+prompt = st.chat_input("Escribe tu mensaje aquí...")
+
+if prompt:
+    # Mostrar mensaje del usuario
+    st.chat_message("user").markdown(prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+    # Enviar a la API de Hugging Face
+    payload = {"inputs": prompt}
+    response = requests.post(API_URL, headers=headers, json=payload)
+
+    if response.status_code == 200:
         try:
-            inputs = tokenizer([user_input], return_tensors="pt")
-            reply_ids = model.generate(**inputs)
-            reply = tokenizer.decode(reply_ids[0], skip_special_tokens=True)
-            print(f"🐾 Carla: {reply}\n")
-        except Exception as e:
-            print(f"⚠️ Ocurrió un error procesando tu mensaje: {e}\n")
+            data = response.json()
+            bot_reply = data[0]["generated_text"]
+        except Exception:
+            bot_reply = "Lo siento, ocurrió un error procesando la respuesta."
+    else:
+        bot_reply = f"⚠️ Error al conectar con Hugging Face: {response.status_code}"
 
-# 🚀 Iniciar el chat
-if __name__ == "__main__":
-    chat_with_carla()
+    # Mostrar respuesta del bot
+    with st.chat_message("assistant"):
+        st.markdown(bot_reply)
+    st.session_state.messages.append({"role": "assistant", "content": bot_reply})
