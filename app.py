@@ -1,103 +1,92 @@
 import streamlit as st
-from transformers import pipeline
-from deep_translator import GoogleTranslator
+from collections import deque
 
-# -----------------------------------------------------------
-# CONFIGURACIÓN DE LA PÁGINA
-# -----------------------------------------------------------
-st.set_page_config(
-    page_title="Carla - Asistente de Zoonosis",
-    page_icon="🐾",
-    layout="centered"
-)
+# --- CONFIGURACIÓN DE LA PÁGINA ---
+st.set_page_config(page_title="Asistente de Zoonosis", page_icon="🐾")
+st.title("🐾 Carla — Asistente Virtual de Zoonosis 🐶🐱")
 
-st.title("🐾 CarlaTLR - Asistente Virtual de Zoonosis")
-st.markdown(
-    "¡Hola! Soy **Carla**, tu asistente virtual. 🐶🐱<br>"
-    "Puedo ayudarte con información sobre **zoonosis, vacunación, prevención y cuidado animal**.",
-    unsafe_allow_html=True
-)
+st.markdown("""
+Soy **Carla**, tu asistente de Zoonosis Municipal de **Termas de Río Hondo, Santiago del Estero**.  
+Puedo informarte sobre:
+- 📅 Horarios y lugares de castración  
+- 🐾 Cuidados pre y post operatorios  
+- 💚 Beneficios y edades recomendadas  
+- 🏥 Procedimiento y cantidad diaria de castraciones  
+""")
 
-# -----------------------------------------------------------
-# CARGAR MODELO (TinyLlama)
-# -----------------------------------------------------------
-@st.cache_resource
-def cargar_modelo():
+# --- CARGAR INFORMACIÓN LOCAL ---
+def cargar_info():
     try:
-        model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
-        st.info(f"Cargando modelo `{model_name}`... Puede tardar unos segundos ⏳")
-        model = pipeline("text-generation", model=model_name)
-        st.success("✅ Modelo cargado correctamente.")
-        return model
-    except Exception as e:
-        st.error(f"❌ Error al cargar el modelo: {e}")
-        return None
+        with open("info_zoonosis.txt", "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return "⚠️ No se encontró el archivo de información local."
 
-nlp = cargar_modelo()
-translator = GoogleTranslator(source='auto', target='en')
-translator_back = GoogleTranslator(source='en', target='es')
+info_local = cargar_info().lower()
 
-# -----------------------------------------------------------
-# CONTEXTO DEL CHATBOT
-# -----------------------------------------------------------
-contexto = (
-    "Eres Carla, una asistente virtual especializada en zoonosis, vacunación y cuidado animal. "
-    "Brindas información confiable y clara sobre prevención de enfermedades, campañas de vacunación, "
-    "cuidados veterinarios y tenencia responsable de mascotas. Respondes siempre en español y con un tono amable."
-)
+# --- FUNCIÓN PARA BUSCAR EN INFORMACIÓN LOCAL Y VALIDAR ESPECIES ---
+def buscar_respuesta_local(pregunta):
+    pregunta = pregunta.lower()
+    
+    # --- Validar especies ---
+    animales_prohibidos = ["conejo", "hurón", "loro", "cobayo"]  # se puede ampliar
+    for animal in animales_prohibidos:
+        if animal in pregunta:
+            return "❌ Solo se castran perros y gatos en Zoonosis."
 
+    # --- Búsqueda en info local según palabras clave ---
+    claves = {
+        "horario": "horario de castración",
+        "hora": "horario de castración",
+        "mañana": "horario de castración",
+        "lugar": "lugares de castración",
+        "dónde": "lugares de castración",
+        "direccion": "lugares de castración",
+        "cuidados": "cuidados pre y post operatorios",
+        "preoperatorio": "cuidados pre y post operatorios",
+        "postoperatorio": "cuidados pre y post operatorios",
+        "ventajas": "ventajas de la castración",
+        "beneficios": "ventajas de la castración",
+        "edad": "edad recomendada",
+        "procedimiento": "procedimiento de castración",
+        "especie": "especies que se castran",
+        "cuantos": "cantidad diaria de castraciones",
+        "turno": "orden de llegada"
+    }
+
+    for clave, tema in claves.items():
+        if clave in pregunta:
+            inicio = info_local.find(tema.lower())
+            if inicio != -1:
+                fin = info_local.find("\n\n", inicio)
+                if fin == -1:
+                    fin = len(info_local)
+                return info_local[inicio:fin].strip().capitalize()
+    return "Lo siento, no tengo información sobre ese tema. Podés preguntar por horarios, lugares o cuidados de castración."
+
+# --- HISTORIAL (MEMORIA DE CONTEXTO) ---
 if "historial" not in st.session_state:
-    st.session_state.historial = ""
-
-# -----------------------------------------------------------
-# FUNCIÓN DE RESPUESTA
-# -----------------------------------------------------------
-def responder(texto_es):
-    if not texto_es.strip():
-        return "Por favor, escribí una pregunta o mensaje."
-
-    # Traducir al inglés (TinyLlama fue entrenado principalmente en inglés)
-    texto_en = translator.translate(texto_es)
-
-    prompt_en = (
-        f"{contexto}\n\n"
-        f"Previous conversation:\n{st.session_state.historial}\n\n"
-        f"User: {texto_en}\nAssistant:"
+    st.session_state.historial = deque(maxlen=6)
+    st.session_state.historial.append(
+        {"role": "assistant", "content": "¡Hola! 👋 Soy Carla, asistente de Zoonosis. ¿En qué puedo ayudarte hoy?"}
     )
 
-    try:
-        generacion = nlp(
-            prompt_en,
-            max_new_tokens=60,
-            do_sample=True,
-            temperature=0.8,
-            top_p=0.9,
-            num_return_sequences=1
-        )[0]
-        respuesta_en = generacion['generated_text'][len(prompt_en):].strip()
-    except Exception as e:
-        respuesta_en = "I'm not sure how to respond to that."
-        st.error(f"⚠️ Error interno del modelo: {e}")
+# --- CAMPO DE ENTRADA ---
+pregunta = st.chat_input("Escribí tu pregunta aquí...")
 
-    # Traducir respuesta al español
-    respuesta_es = translator_back.translate(respuesta_en)
+# --- PROCESAR PREGUNTA ---
+if pregunta:
+    st.session_state.historial.append({"role": "user", "content": pregunta})
 
-    # Actualizar historial
-    st.session_state.historial += f"\nUsuario: {texto_es}\nCarla: {respuesta_es}"
-    return respuesta_es
+    # Buscar respuesta en la información local
+    respuesta = buscar_respuesta_local(pregunta)
 
-# -----------------------------------------------------------
-# INTERFAZ DE CHAT
-# -----------------------------------------------------------
-user_input = st.text_input("💬 Escribí tu consulta aquí:")
+    # Guardar respuesta
+    st.session_state.historial.append({"role": "assistant", "content": respuesta})
 
-if st.button("Enviar"):
-    if nlp:
-        respuesta = responder(user_input)
-        st.markdown(f"**🐾 Carla:** {respuesta}")
+# --- MOSTRAR HISTORIAL ---
+for msg in st.session_state.historial:
+    if msg["role"] == "user":
+        st.markdown(f"🧑‍💬 **Tú:** {msg['content']}")
     else:
-        st.error("El modelo no se pudo cargar correctamente.")
-
-# Mostrar historial opcional
-with st.expander("🧠 Ver historial de conversación"):
-    st.text(st.session_state.historial)
+        st.markdown(f"🐾 **Carla:** {msg['content']}")
