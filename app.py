@@ -169,6 +169,10 @@ def buscar_respuesta_local(pregunta):
                 fin = len(info_local)
             respuesta = info_local[inicio:fin].strip().capitalize()
             return f"Creo que te referís a esto 🐾:\n\n{respuesta}"
+        
+        # 💾 Guardar preguntas sin respuesta (en dos formatos)
+    with open("preguntas_no_resueltas.txt", "a", encoding="utf-8") as f:
+        f.write(pregunta + "\n")
 
     guardar_pregunta_no_respondida(pregunta)
     return random.choice([
