@@ -91,21 +91,27 @@ def buscar_respuesta_local(pregunta):
             ])
 
     claves = {
-        "hola" : "saludo",
-        "buenos dias" : "saludo",
-        "buenas" : "saludo",
+        # saludos
+        "hola": "saludo",
+        "buenos dias": "saludo",
+        "buenas": "saludo",
+        
+        # horario
         "horario": "horario de castración",
         "hora": "horario de castración",
         "mañana": "horario de castración",
         "cuando": "horario de castración",
         "día": "horario de castración",
         "dias": "horario de castración",
+        
+        # lugares
         "lugar": "lugares de castración",
         "dónde": "lugares de castración",
-        "donde": "lugares de castración",
         "direccion": "lugares de castración",
         "hospital": "lugares de castración",
         "barrio": "lugares de castración",
+        
+        # cuidados
         "cuidados": "cuidados pre y post operatorios",
         "preoperatorio": "cuidados pre y post operatorios",
         "pre operatorio": "cuidados pre y post operatorios",
@@ -114,17 +120,22 @@ def buscar_respuesta_local(pregunta):
         "preparación": "cuidados pre y post operatorios",
         "postoperatorio": "cuidados pre y post operatorios",
         "post operatorio": "cuidados pre y post operatorios",
-        "después": "cuidados pre y post operatorios",
         "despues": "cuidados pre y post operatorios",
         "curación": "cuidados pre y post operatorios",
+        
+         # ventajas
         "ventajas": "ventajas de la castración",
         "beneficios": "ventajas de la castración",
         "por qué": "ventajas de la castración",
         "porque": "ventajas de la castración",
+        
+       # edad
         "edad": "edad recomendada",
         "meses": "edad recomendada",
         "a qué edad": "edad recomendada",
-        "a que edad": "edad recomendada",
+        
+        
+       # procedimiento
         "procedimiento": "procedimiento de castración",
         "cómo": "procedimiento de castración",
         "como": "procedimiento de castración",
@@ -132,15 +143,51 @@ def buscar_respuesta_local(pregunta):
         "que hacen": "procedimiento de castración",
         "operan": "procedimiento de castración",
         "operación": "procedimiento de castración",
+        
+        # especies
         "especie": "especies que se castran",
         "animal": "especies que se castran",
         "perro": "especies que se castran",
         "gato": "especies que se castran",
+        
+        # cantidad diaria
         "cuántos": "cantidad diaria de castraciones",
         "cuantos": "cantidad diaria de castraciones",
         "cantidad": "cantidad diaria de castraciones",
+        
+        # turnos
         "turno": "orden de llegada",
-        "orden": "orden de llegada"
+        "orden": "orden de llegada",
+        #vacuna antirrabica
+        "vacuna": "vacunación antirrábica",
+        "vacunación": "vacunación antirrábica",
+        "antirrábica": "vacunación antirrábica",
+        "rabia": "vacunación antirrábica",
+        "vacunar": "vacunación antirrábica",
+        "inyección": "vacunación antirrábica",
+
+        #Adopciones
+        "adopción": "adopciones",
+        "adoptar": "adopciones",
+        "adoptar perro": "adopciones",
+        "adoptar gato": "adopciones",
+        "perrito": "adopciones",
+        "gatito": "adopciones",
+
+        #Desparacitacion
+        "desparasitación": "desparasitación",
+        "desparasitar": "desparasitación",
+        "parasitos": "desparasitación",
+        "lombrices": "desparasitación",
+        "pipeta": "desparasitación",
+
+
+        #Animales encontrados
+        "encontré": "animales encontrados",
+        "herido": "animales encontrados",
+        "perdido": "animales encontrados",
+        "animal calle": "animales encontrados",
+        "rescate": "animales encontrados",
     }
 
     # --- coincidencia exacta ---
@@ -261,5 +308,6 @@ elif menu == "Modo administrador":
             st.success("✅ Información actualizada correctamente.")
     elif password:
         st.error("❌ Clave incorrecta.")
+
 
 
