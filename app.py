@@ -252,6 +252,7 @@ def mostrar_recordatorio():
 menu = st.sidebar.radio("📋 Menú", ["Chat", "Preguntas pendientes", "Estadísticas", "Modo administrador"])
 
 # --- CHAT ---
+# --- CHAT ---
 if menu == "Chat":
     if "historial" not in st.session_state:
         st.session_state.historial = deque(maxlen=6)
@@ -267,11 +268,67 @@ if menu == "Chat":
         st.session_state.historial.append({"role": "assistant", "content": respuesta})
         mostrar_recordatorio()
 
+    # --- ESTILO PERSONALIZADO ---
+    st.markdown("""
+        <style>
+        .chat-bubble-user {
+            background-color: #E3F2FD;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin: 6px 0;
+        }
+        .chat-bubble-assistant {
+            background-color: #FFF3E0;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin: 6px 0;
+            display: flex;
+            align-items: center;
+        }
+        .dog-avatar {
+            width: 48px;
+            height: 48px;
+            margin-right: 10px;
+            border-radius: 50%;
+            animation: wag 1.5s infinite ease-in-out;
+        }
+        @keyframes wag {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-10deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .typing {
+            font-style: italic;
+            color: gray;
+            animation: blink 1s steps(1) infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # --- MOSTRAR HISTORIAL DE MENSAJES ---
     for msg in st.session_state.historial:
         if msg["role"] == "user":
-            st.markdown(f"<div style='background-color:#E3F2FD;padding:8px;border-radius:10px;margin:4px 0;'>🧑‍💬 <b>Tú:</b> {msg['content']}</div>", unsafe_allow_html=True)
+            st.markdown(
+                f"<div class='chat-bubble-user'>🧑‍💬 <b>Tú:</b> {msg['content']}</div>",
+                unsafe_allow_html=True
+            )
         else:
-            st.markdown(f"<div style='background-color:#FFF3E0;padding:8px;border-radius:10px;margin:4px 0;'>🐾 <b>Carla:</b> {msg['content']}</div>", unsafe_allow_html=True)
+            # Imagen animada (cabeza de perro)
+            st.markdown(
+                f"""
+                <div class='chat-bubble-assistant'>
+                    <img src='https://cdn-icons-png.flaticon.com/512/616/616408.png' class='dog-avatar'>
+                    <div><b>Carla 🐾:</b> {msg['content']}</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+=True)
 
 # --- PREGUNTAS PENDIENTES ---
 elif menu == "Preguntas pendientes":
@@ -313,6 +370,7 @@ elif menu == "Modo administrador":
             st.success("✅ Información actualizada correctamente.")
     elif password:
         st.error("❌ Clave incorrecta.")
+
 
 
 
