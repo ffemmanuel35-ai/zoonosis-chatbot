@@ -328,7 +328,6 @@ if menu == "Chat":
                 """,
                 unsafe_allow_html=True
             )
-=True)
 
 # --- PREGUNTAS PENDIENTES ---
 elif menu == "Preguntas pendientes":
@@ -370,6 +369,7 @@ elif menu == "Modo administrador":
             st.success("✅ Información actualizada correctamente.")
     elif password:
         st.error("❌ Clave incorrecta.")
+
 
 
 
