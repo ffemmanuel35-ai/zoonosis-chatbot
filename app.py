@@ -91,6 +91,9 @@ def buscar_respuesta_local(pregunta):
             ])
 
     claves = {
+        "hola" : "saludo"
+        "buenos dias" : "saludo"
+        "buenas" : "saludo"
         "horario": "horario de castración",
         "hora": "horario de castración",
         "mañana": "horario de castración",
@@ -258,3 +261,4 @@ elif menu == "Modo administrador":
             st.success("✅ Información actualizada correctamente.")
     elif password:
         st.error("❌ Clave incorrecta.")
+
