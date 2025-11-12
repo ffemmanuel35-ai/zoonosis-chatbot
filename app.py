@@ -107,6 +107,7 @@ def buscar_respuesta_local(pregunta):
         # lugares
         "lugar": "lugares de castración",
         "dónde": "lugares de castración",
+        "donde": "lugares de castración",
         "direccion": "lugares de castración",
         "hospital": "lugares de castración",
         "barrio": "lugares de castración",
@@ -118,11 +119,13 @@ def buscar_respuesta_local(pregunta):
         "antes": "cuidados pre y post operatorios",
         "ayuno": "cuidados pre y post operatorios",
         "preparación": "cuidados pre y post operatorios",
+        "preparacion": "cuidados pre y post operatorios",
         "postoperatorio": "cuidados pre y post operatorios",
         "post operatorio": "cuidados pre y post operatorios",
         "despues": "cuidados pre y post operatorios",
         "curación": "cuidados pre y post operatorios",
-        
+        "curacion": "cuidados pre y post operatorios",
+
          # ventajas
         "ventajas": "ventajas de la castración",
         "beneficios": "ventajas de la castración",
@@ -143,7 +146,9 @@ def buscar_respuesta_local(pregunta):
         "que hacen": "procedimiento de castración",
         "operan": "procedimiento de castración",
         "operación": "procedimiento de castración",
-        
+        "operacion": "procedimiento de castración",
+        "castracion": "procedimiento de castración",
+
         # especies
         "especie": "especies que se castran",
         "animal": "especies que se castran",
@@ -308,6 +313,7 @@ elif menu == "Modo administrador":
             st.success("✅ Información actualizada correctamente.")
     elif password:
         st.error("❌ Clave incorrecta.")
+
 
 
 
