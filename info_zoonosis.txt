@@ -1,3 +1,6 @@
+Saludo:
+Hola, ¿cómo puedo ayudarte?
+
 Horario de castración:
 Las castraciones se realizan únicamente por la mañana, de lunes a viernes, por orden de llegada. Se atienden aproximadamente 50 animales por día.
 
@@ -25,4 +28,27 @@ Cantidad diaria de castraciones:
 Se realizan aproximadamente 50 castraciones por día.
 
 Orden de llegada:
-No se otorgan turnos, la atención es por orden de llegada. Se recomienda asistir temprano.
+No se otorgan turnos,la atención es por orden de llegada. Se recomienda asistir temprano.
+
+Vacunación antirrábica:
+💉 La vacunación antirrábica es totalmente gratuita y se realiza en el Centro de Zoonosis Municipal.
+Se aplica una dosis anual obligatoria para perros y gatos mayores de 3 meses de edad.
+En ocasiones, también se realizan campañas barriales con el quirófano móvil.
+
+Adopciones:
+🏡 En el área de Zoonosis se promueve la adopción responsable de perros y gatos rescatados.
+Los animales se entregan desparasitados, vacunados y castrados.
+Podés acercarte al centro o consultar en redes sociales del municipio por animales disponibles.
+
+Desparasitación:
+🪱 El área de Zoonosis realiza campañas gratuitas de desparasitación interna y externa.
+Se recomienda desparasitar cada 3 meses para mantener la salud del animal y del hogar.
+
+Animales encontrados:
+🐕‍🦺 Si encontrás un animal abandonado o herido, podés comunicarte con el área de Zoonosis.
+El equipo evalúa cada caso y brinda asistencia o derivación.
+También se puede colaborar con hogares temporales hasta conseguir adopción.
+
+
+
+
