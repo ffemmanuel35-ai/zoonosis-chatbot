@@ -66,8 +66,6 @@ Inspirado en la idea de acercar la información pública de forma accesible y mo
 
 *Generación automática de respuestas con IA (como GPT o un modelo local)
 
-*Panel administrativo web con login seguro.
-
 *Integracion de registro en planilla de excel para programar castraciones.
 
 *Estadísticas visuales más avanzadas (📅 Gráfico de cuántas consultas hay por día.💬 Palabras más frecuentes.📈 Porcentaje de respuestas exitosas vs no respondidas)
