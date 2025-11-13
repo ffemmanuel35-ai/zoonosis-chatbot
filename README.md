@@ -18,11 +18,17 @@ Carla es un chatbot desarrollado con Python + Streamlit para asistir a los vecin
 
 🧱 Estructura del repositorio
 ├── app.py                        # Código principal del chatbot
+
 ├── info_zoonosis.txt             # Base de conocimiento local con la información que usa el bot
+
 ├── preguntas_no_respondidas.log  # Registro con fecha/hora de preguntas sin respuesta
+
 ├── estadisticas.log              # Archivo donde se guardan las métricas del uso
+
 ├── requirements.txt              # Librerías necesarias para ejecutar el proyecto
+
 ├── README.md                     # Este archivo :)
+
 └── .devcontainer/                # Configuración opcional para desarrollo en contenedores
 
 🖥️ Requisitos previos
