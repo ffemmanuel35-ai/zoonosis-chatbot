@@ -62,7 +62,7 @@ Inspirado en la idea de acercar la información pública de forma accesible y mo
 
 🧠 Futuras mejoras
 
-*Integración con base de datos externa (por ejemplo SQLite, MySQL o Firebase).
+*Integración con base de datos externa (por ejemplo SQLite, MySQL o JSON).
 
 *Generación automática de respuestas con IA (como GPT o un modelo local)
 
