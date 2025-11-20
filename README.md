@@ -6,36 +6,37 @@ Carla es un chatbot creado para asistir a la comunidad de Termas de Río Hondo (
 
 El proyecto surge del diagnóstico institucional donde se identificaron problemas como:
 
-Falta de información clara para la comunidad
+*Falta de información clara para la comunidad
 
-Comunicación limitada sobre horarios y lugares
+*Comunicación limitada sobre horarios y lugares
 
-Desconocimiento de campañas gratuitas
+*Desconocimiento de campañas gratuitas
 
-Dificultad para acceder a información confiable
+*Dificultad para acceder a información confiable
 
 Carla se propone como una solución digital accesible, automatizada y de rápido acceso, que mejora la comunicación entre municipio y vecinos.
 
-Objetivos del Proyecto
-Objetivo general
+**Objetivos del Proyecto**
+
+Objetivo general:
 
 Desarrollar una herramienta digital basada en datos que mejore la comunicación del municipio, brindando información inmediata y organizada sobre servicios de Zoonosis.
 
-Objetivos específicos
+Objetivos específicos:
 
-Brindar información confiable sobre castraciones, horarios, lugares y cuidados.
+*Brindar información confiable sobre castraciones, horarios, lugares y cuidados.
 
-Implementar una base de conocimiento editable y escalable.
+*Implementar una base de conocimiento editable y escalable.
 
-Incorporar comprensión semántica para responder preguntas variadas.
+*Incorporar comprensión semántica para responder preguntas variadas.
 
-Registrar métricas de uso para análisis posteriores.
+*Registrar métricas de uso para análisis posteriores.
 
-Integrar un flujo de datos ciudadano mediante Google Forms, Sheets y Looker Studio.
+*Integrar un flujo de datos ciudadano mediante Google Forms, Sheets y Looker Studio.
 
-Vincular el chatbot con las necesidades reales detectadas en el diagnóstico comunitario.
+*Vincular el chatbot con las necesidades reales detectadas en el diagnóstico comunitario.
 
-Relevamiento ciudadano mediante Google Forms
+*Relevamiento ciudadano mediante Google Forms
 
 Para fundamentar el proyecto y entender las necesidades reales de la comunidad, se desarrolló el formulario:
 
@@ -62,11 +63,11 @@ Disponibilidad ciudadana
 
  4. Motivos de no participación
 
-Transporte
+*Transporte
 
-Desconocimiento
+*Desconocimiento
 
-Horarios poco convenientes
+*Horarios poco convenientes
 
 Temor al procedimiento
 ➡ El principal obstáculo es la falta de información clara
@@ -76,17 +77,17 @@ Temor al procedimiento
 Valoración del servicio
 ➡ Alto nivel de satisfacción → el problema es informativo, no de calidad
 
-ntegración con Google Sheets y Looker Studio
+**Integración con Google Sheets**
 
 Toda la información del formulario se almacena automáticamente en Google Sheets, lo que permitió:
 
-Consolidar respuestas ciudadanas
+*Consolidar respuestas ciudadanas
 
-Integrar datos históricos (2019–2025)
+*Integrar datos históricos (2019–2025)
 
-Normalizar barrios y motivos de participación
+*Normalizar barrios y motivos de participación
 
-Crear un tablero digital con:
+*Crear un tablero digital con:
 
 ✔ Castraciones por barrio
 ✔ Tendencia histórica
@@ -96,7 +97,7 @@ Crear un tablero digital con:
 ✔ Motivos de no participación
 ✔ Preferencias horarias
 
-Relación entre el formulario y el chatbot
+**Relación entre el formulario y el chatbot**
 
 El relevamiento ciudadano fue clave para:
 
@@ -108,15 +109,15 @@ La información de castración, vacunación, adoptores, cuidados y horarios prov
 
 Se detectó que la ciudadanía necesita:
 
-Horarios claros
+*Horarios claros
 
-Indicaciones pre y post operatorias
+*Indicaciones pre y post operatorias
 
-Detalles del procedimiento
+*Detalles del procedimiento
 
-Información sobre animales encontrados
+*Información sobre animales encontrados
 
-Respuestas rápidas
+*Respuestas rápidas
 
 ✔ Justificar la necesidad de Carla
 
@@ -130,9 +131,9 @@ Descripción técnica del chatbot
 
 Carla combina coincidencia de palabras clave y comprensión semántica aplicada mediante:
 
-TF-IDF vectorization
+*TF-IDF vectorization
 
-Cosine similarity
+*Cosine similarity
 
 Esto permite reconocer preguntas similares aunque el usuario no use las mismas palabras.
 
@@ -144,7 +145,7 @@ Ejemplo:
 
 Ambas llevan a la misma respuesta.
 
-Tecnologías utilizadas:
+**Tecnologías utilizadas:**
 
 Tecnología       /           Herramienta	Uso
 Python 3.11	              Desarrollo principal
@@ -155,61 +156,60 @@ Archivos .txt/.log	      Base de conocimiento y registros
 Google Forms	            Relevamiento ciudadano inicial
 Google Sheets	            Almacenamiento centralizado
 
-ase de conocimiento
+Base de conocimiento
 
 La información que Carla utiliza está almacenada en:
 
-info_zoonosis.txt
+*info_zoonosis.txt
 
-Incluye contenido sobre:
+*Incluye contenido sobre:
 
-Horarios y lugares de castración
+*Horarios y lugares de castración
 
-Procedimiento quirúrgico
+*Procedimiento quirúrgico
 
-Edad y preparación del animal
+*Edad y preparación del animal
 
-Cuidados pre y post operatorios
+*Cuidados pre y post operatorios
 
-Vacunación y desparasitación
+*Vacunación y desparasitación
 
-Adopciones
+*Adopciones
 
-Animales encontrados
+*Animales encontrados
 
-El archivo es editable desde el Modo Administrador.
+*El archivo es editable desde el Modo Administrador.
 
-Próxima etapa: migración a base de datos SQL (SQLite o MySQL).
 
 Panel de estadísticas
 
 La aplicación almacena métricas en tiempo real:
 
-Total de preguntas
+*Total de preguntas
 
-Preguntas respondidas
+*Preguntas respondidas
 
-Preguntas no respondidas
+*Preguntas no respondidas
 
-Efectividad del chatbot
+*Efectividad del chatbot
 
-Historial de uso
+*Historial de uso
 
 Estos datos se visualizan con Matplotlib desde la app.
 
 Archivos generados automáticamente:
-estadisticas.log
-preguntas_no_respondidas.log
+*estadisticas.log
+*preguntas_no_respondidas.log
 
-Modo Administrador
+**Modo Administrador**
 
 Permite:
 
-Editar toda la información usada por el chatbot
+*Editar toda la información usada por el chatbot
 
-Actualizar textos y agregar nuevos temas
+*Actualizar textos y agregar nuevos temas
 
-Gestionar contenido sin modificar el código
+*Gestionar contenido sin modificar el código
 
 Instalación y ejecución
 1️⃣ Clonar el repositorio
@@ -222,6 +222,8 @@ pip install -r requirements.txt
 3️⃣ Ejecutar Carla
 streamlit run app.py
 
+
+**Link de Streamlit:** https://zoonosis-chatbot-i8ahw95fyc6f2x3mipjn8y.streamlit.app/
 
 Futuras mejoras
 
@@ -237,11 +239,11 @@ Futuras mejoras
 
 ✔ Estadísticas avanzadas:
 
-consultas por día
+*consultas por día
 
-palabras más frecuentes
+*palabras más frecuentes
 
-tasa de efectividad
+*tasa de efectividad
 
 ✔ Versión móvil / PWA
 
